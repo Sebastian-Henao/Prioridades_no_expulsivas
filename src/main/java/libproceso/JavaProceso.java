@@ -3,7 +3,7 @@ package libproceso;
 // Clase que representa las funciones de la biblioteca dinamica JNI
 
 public class JavaProceso {
-    public native String algoritmo_Prioridades(int id_proceso, int tiempo_llegada, int tiempo_rafaga, int prioridad);
+    public native String algoritmo_Prioridades(String json);
 
     public JavaProceso(){
         try{
