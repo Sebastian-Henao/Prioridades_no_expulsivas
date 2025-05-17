@@ -17,7 +17,7 @@ public class PrioridadesRestController {
 
     // GET: recibir parámetros de 5 procesos vía query string
     @GetMapping("/prioridades")
-    public String prioridadPorGet(
+    public String prioridad(
             @RequestParam List<Integer> id_proceso,
             @RequestParam List<Integer> tiempo_llegada,
             @RequestParam List<Integer> tiempo_rafaga,
@@ -27,7 +27,7 @@ public class PrioridadesRestController {
             return "Debe enviar exactamente 5 procesos con todos los campos.";
         }
 
-        StringBuilder json = new StringBuilder("[");
+        StringBuilder json = new StringBuilder("{\"procesos\":[");
         for (int i = 0; i < 5; i++) {
             json.append(String.format(
                     "{\"id_proceso\":%d,\"tiempo_llegada\":%d,\"tiempo_rafaga\":%d,\"prioridad\":%d}",
