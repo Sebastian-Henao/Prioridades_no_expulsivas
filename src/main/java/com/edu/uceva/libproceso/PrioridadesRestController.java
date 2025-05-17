@@ -43,25 +43,5 @@ public class PrioridadesRestController {
         System.out.println("Procesos recibidos por GET: " + json);
         return prioridades.algoritmo_Prioridades(json.toString());
     }
-
-    // Método auxiliar para construir JSON desde lista (POST)
-    private String construirJsonDesdeLista(List<Map<String, Integer>> procesos) {
-        StringBuilder json = new StringBuilder("[");
-        for (int i = 0; i < procesos.size(); i++) {
-            Map<String, Integer> proceso = procesos.get(i);
-            json.append(String.format(
-                    "{\"id_proceso\":%d,\"tiempo_llegada\":%d,\"tiempo_rafaga\":%d,\"prioridad\":%d}",
-                    proceso.get("id_proceso"),
-                    proceso.get("tiempo_llegada"),
-                    proceso.get("tiempo_rafaga"),
-                    proceso.get("prioridad")
-            ));
-            if (i < procesos.size() - 1) {
-                json.append(",");
-            }
-        }
-        json.append("]");
-        return json.toString();
-    }
 }
 
