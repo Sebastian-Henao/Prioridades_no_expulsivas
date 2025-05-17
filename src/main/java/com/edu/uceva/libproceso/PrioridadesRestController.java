@@ -1,7 +1,5 @@
 package com.edu.uceva.libproceso;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import libproceso.JavaProceso;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,26 +9,59 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/prioridades-service")
 public class PrioridadesRestController {
+
     private final JavaProceso prioridades;
+
     public PrioridadesRestController() {
         this.prioridades = new JavaProceso();
     }
-    @PostMapping("/prioridades")
-    public String prioridad(@RequestBody List<Map<String, Integer>> procesos) {
-        System.out.println("Procesos recibidos: " + procesos);
-        String json = "[";
+
+    // GET: recibir parámetros de 5 procesos vía query string
+    @GetMapping("/prioridades")
+    public String prioridadPorGet(
+            @RequestParam List<Integer> id_proceso,
+            @RequestParam List<Integer> tiempo_llegada,
+            @RequestParam List<Integer> tiempo_rafaga,
+            @RequestParam List<Integer> prioridad
+    ) {
+        if (id_proceso.size() != 5 || tiempo_llegada.size() != 5 || tiempo_rafaga.size() != 5 || prioridad.size() != 5) {
+            return "Debe enviar exactamente 5 procesos con todos los campos.";
+        }
+
+        StringBuilder json = new StringBuilder("[");
+        for (int i = 0; i < 5; i++) {
+            json.append(String.format(
+                    "{\"id_proceso\":%d,\"tiempo_llegada\":%d,\"tiempo_rafaga\":%d,\"prioridad\":%d}",
+                    id_proceso.get(i),
+                    tiempo_llegada.get(i),
+                    tiempo_rafaga.get(i),
+                    prioridad.get(i)
+            ));
+            if (i < 4) json.append(",");
+        }
+        json.append("]");
+        System.out.println("Procesos recibidos por GET: " + json);
+        return prioridades.algoritmo_Prioridades(json.toString());
+    }
+
+    // Método auxiliar para construir JSON desde lista (POST)
+    private String construirJsonDesdeLista(List<Map<String, Integer>> procesos) {
+        StringBuilder json = new StringBuilder("[");
         for (int i = 0; i < procesos.size(); i++) {
             Map<String, Integer> proceso = procesos.get(i);
-            json += String.format("{\"id_proceso\":%d,\"tiempo_llegada\":%d,\"tiempo_rafaga\":%d,\"prioridad\":%d}",
+            json.append(String.format(
+                    "{\"id_proceso\":%d,\"tiempo_llegada\":%d,\"tiempo_rafaga\":%d,\"prioridad\":%d}",
                     proceso.get("id_proceso"),
                     proceso.get("tiempo_llegada"),
                     proceso.get("tiempo_rafaga"),
-                    proceso.get("prioridad"));
-            if (i < procesos.size() - 1)
-                json += ",";
+                    proceso.get("prioridad")
+            ));
+            if (i < procesos.size() - 1) {
+                json.append(",");
+            }
         }
-        json += "]";
-        System.out.println("Enviando JSON a la biblioteca natica: " + json);
-        return prioridades.algoritmo_Prioridades(json);
+        json.append("]");
+        return json.toString();
     }
 }
+
