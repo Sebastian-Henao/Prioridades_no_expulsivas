@@ -6,6 +6,7 @@ import libproceso.JavaProceso;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/prioridades-service")
@@ -14,15 +15,22 @@ public class PrioridadesRestController {
     public PrioridadesRestController() {
         this.prioridades = new JavaProceso();
     }
-    @GetMapping("/prioridades")
-    public String calcularPrioridades(@RequestBody List<ProcesoDTO> procesos) {
-        ObjectMapper mapper = new ObjectMapper();
-        try{
-            String json = mapper.writeValueAsString(procesos);
-            System.out.println("Enviando JSON a la biblioteca nativa: " + json);
-            return prioridades.algoritmo_Prioridades(json);
-        }catch (JsonProcessingException e){
-            return "{\"error\": \"Error al procesar el JSON: " + e.getMessage() + "\"}";
+    @PostMapping("/prioridades")
+    public String prioridad(@RequestBody List<Map<String, Integer>> procesos) {
+        System.out.println("Procesos recibidos: " + procesos);
+        String json = "[";
+        for (int i = 0; i < procesos.size(); i++) {
+            Map<String, Integer> proceso = procesos.get(i);
+            json += String.format("{\"id_proceso\":%d,\"tiempo_llegada\":%d,\"tiempo_rafaga\":%d,\"prioridad\":%d}",
+                    proceso.get("id_proceso"),
+                    proceso.get("tiempo_llegada"),
+                    proceso.get("tiempo_rafaga"),
+                    proceso.get("prioridad"));
+            if (i < procesos.size() - 1)
+                json += ",";
         }
+        json += "]";
+        System.out.println("Enviando JSON a la biblioteca natica: " + json);
+        return prioridades.algoritmo_Prioridades(json);
     }
 }
