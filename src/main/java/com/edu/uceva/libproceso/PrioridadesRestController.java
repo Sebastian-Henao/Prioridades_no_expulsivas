@@ -18,27 +18,27 @@ public class PrioridadesRestController {
     // GET: recibir parámetros de 5 procesos vía query string
     @GetMapping("/prioridades")
     public String prioridad(
-            @RequestParam List<Integer> id_proceso,
-            @RequestParam List<Integer> tiempo_llegada,
-            @RequestParam List<Integer> tiempo_rafaga,
+            @RequestParam List<Integer> id,
+            @RequestParam List<Integer> llegada,
+            @RequestParam List<Integer> rafaga,
             @RequestParam List<Integer> prioridad
     ) {
-        if (id_proceso.size() != 5 || tiempo_llegada.size() != 5 || tiempo_rafaga.size() != 5 || prioridad.size() != 5) {
+        if (id.size() != 5 || llegada.size() != 5 || rafaga.size() != 5 || prioridad.size() != 5) {
             return "Debe enviar exactamente 5 procesos con todos los campos.";
         }
 
         StringBuilder json = new StringBuilder("{\"procesos\":[");
         for (int i = 0; i < 5; i++) {
             json.append(String.format(
-                    "{\"id_proceso\":%d,\"tiempo_llegada\":%d,\"tiempo_rafaga\":%d,\"prioridad\":%d}",
-                    id_proceso.get(i),
-                    tiempo_llegada.get(i),
-                    tiempo_rafaga.get(i),
+                    "{\"id\":%d,\"llegada\":%d,\"rafaga\":%d,\"prioridad\":%d}",
+                    id.get(i),
+                    llegada.get(i),
+                    rafaga.get(i),
                     prioridad.get(i)
             ));
             if (i < 4) json.append(",");
         }
-        json.append("]");
+        json.append("]}");
         System.out.println("Procesos recibidos por GET: " + json);
         return prioridades.algoritmo_Prioridades(json.toString());
     }
