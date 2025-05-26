@@ -40,7 +40,7 @@ public class PrioridadesRestController {
         }
         json.append("]}");
         System.out.println("Procesos recibidos por GET: " + json);
-        return prioridades.algoritmo_1Prioridades(json.toString());
+        return prioridades.algoritmo_Prioridades(json.toString());
     }
 }
 
