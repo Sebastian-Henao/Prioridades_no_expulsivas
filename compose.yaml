@@ -2,7 +2,7 @@ services:
   spring-jni:
     image: 'sebastianhenaogamboa/prioridades-no-expulsivas:latest'
     ports:
-      - '8083:8080'
+      - '8081:8081'
     networks:
       - red-backend-app
 networks:
